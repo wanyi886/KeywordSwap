@@ -27,7 +27,7 @@ const replaceKeywords = (filename, target_keyword, replace_keyword) => {
 }
 
 
-const depthFirstSearch = (directory, extension, target_keyword, replace_keyword) => {
+const depthFirstSearch = (directory, extensions, target_keyword, replace_keyword) => {
     
     // read the redirectory and list the subdirectory or files as an array
     fs.readdir(directory, (err, files) => {
@@ -47,13 +47,14 @@ const depthFirstSearch = (directory, extension, target_keyword, replace_keyword)
                 }
 
                 if (stats.isDirectory()) {
-                    depthFirstSearch(currentDir, extension, target_keyword, replace_keyword);
+                    depthFirstSearch(currentDir, extensions, target_keyword, replace_keyword);
 
                 } else {
 
+                    // use path.extname to extract the file extension from a file path
                     const file_type = path.extname(currentDir)
 
-                    if (file_type == extension) {
+                    if (extensions.includes(file_type)) {
                         replaceKeywords(currentDir, target_keyword, replace_keyword)
                     }
 
@@ -66,8 +67,8 @@ const depthFirstSearch = (directory, extension, target_keyword, replace_keyword)
 }
 
 let directory = 'www.bates.edu'
-let extension = ".html"
+let extensions = [".html", ".htm", ".js"]
 let target_keyword = 'https://www.bates.edu'
 let replace_keyword = ""
 
-depthFirstSearch(directory, extension, target_keyword, replace_keyword)
+depthFirstSearch(directory, extensions, target_keyword, replace_keyword)
